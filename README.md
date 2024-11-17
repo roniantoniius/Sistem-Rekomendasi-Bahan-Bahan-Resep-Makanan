@@ -80,9 +80,26 @@ Berikut merupakan variabel-variabel yang digunakan:
 
 
 #### Hasil Analisis Melalui Exploratory Data Analysis
-Waktu memasak kebanyakan ada di sekitar 10 menit sampai 30 menit, sedangkan kalori sepertinya persebarannya terlalu luas, untuk rating rata-rata pengguna memberikan nilai 4 sampai 5. Penulis `Sydney Mike` memiliki jumlah ulasan yang paling banyak menunjukkan bahwa beliau seorang yang popular baik dari segi baik atau hal lainnya.
 
-Berdasarkan visualisasi yang dibuat menggunakan data resep dan ulasan ditemukan bahwa persebaran data point untuk resep yang memiliki kalori banyak itu rata-rata dimasak pada rentang 10 sampai 30 menit. Selain itu kategori yang memiliki rata-rata jumlah kalori paling banyak yaitu Guatemalan, Buttermilk Biscuits, dan Labor Day. Artinya makanan berlemak yang merupakan tentu saja makanan berat.
+1. Univariate Analysis
+
+![image](https://github.com/user-attachments/assets/414e6d6c-8f78-4be3-af39-9338c1487921)
+
+Waktu memasak kebanyakan ada di sekitar 10 menit sampai 30 menit, sedangkan kalori sepertinya persebarannya terlalu luas, untuk rating rata-rata pengguna memberikan nilai 4 sampai 5. 
+
+![image](https://github.com/user-attachments/assets/c92e40bd-0c9a-45d9-8518-2ddec9bee670)
+
+Penulis `Sydney Mike` memiliki jumlah ulasan yang paling banyak menunjukkan bahwa beliau seorang yang popular baik dari segi baik atau hal lainnya.
+
+2. Multivariate Analysis
+
+![image](https://github.com/user-attachments/assets/0c511ce2-e805-46fa-86d2-945e6b103a1e)
+
+Berdasarkan visualisasi yang dibuat menggunakan data resep dan ulasan ditemukan bahwa persebaran data point untuk resep yang memiliki kalori banyak itu rata-rata dimasak pada rentang 10 sampai 30 menit.
+
+![image](https://github.com/user-attachments/assets/290c1669-71de-44c1-b49a-5aede06f93f7)
+
+Selain itu kategori yang memiliki rata-rata jumlah kalori paling banyak yaitu Guatemalan, Buttermilk Biscuits, dan Labor Day. Artinya makanan berlemak yang merupakan tentu saja makanan berat.
 
 
 ## Data Preparation
@@ -112,6 +129,13 @@ Hal ini hanya dilakukan pada variabel yang akan digunakan pada modeling dengan C
 - Menyiapkan variabel `Resep` untuk digunakan pada model CBF
 Hal ini dilakukan dengan menggabungkan beberapa variabel seperti kata kunci resep, bahan-bahan, kategori resep, dan lama resep dimasak. Khusus untuk bahan-bahan resep itu diubah dan diurutkan menjadi string terlebih dahulu dari yang awalnya sebuah list.
 
+- Count Vectorizer dengan TF-IDF
+Teknik TF-IDF (Term Frequency-Inverse Document Frequency) digunakan untuk merepresentasikan resep sebagai vektor numerik berdasarkan kata-kata yang muncul dalam deskripsinya.
+   - Term Frequency (TF): Mengukur seberapa sering suatu kata muncul dalam resep tertentu.
+   - Inverse Document Frequency (IDF): Memberi bobot lebih besar pada kata-kata unik yang tidak sering muncul di seluruh resep.
+   - Parameter `ngram_range=(1, 2)` memungkinkan analisis kata tunggal (unigrams) dan pasangan kata (bigrams).
+   - Kata-kata umum dalam bahasa Inggris dihapus dengan stop_words='english'.
+
 3. Data Cleaning Untuk Collaborative Filtering
 - Menyiapkan data untuk Collaborative Filtering
 Membuat dataframe baru dengan menggabungkan data ulasan dan resep berdasarkan RecipeId, mengambil kolom penting seperti RecipeCategory, Rating, AuthorId, dan RecipeId, lalu menangani nilai kosong pada Rating dengan mengisinya menggunakan rata-rata rating.
@@ -132,22 +156,16 @@ Split atau membagi dataset dengan bobot 80:20 untuk data train dan data validasi
 Membuat sistem rekomendasi untuk merekomendasikan bahan-bahan terhadap suatu resep makanan dengan memperhatikan data berupa teks yaitu bahan makanan, kategori resep, dan lamanya resep tersebut dimasak.
 
 Tahapannya:
-1. Count Vectorizer dengan TF-IDF
-Teknik TF-IDF (Term Frequency-Inverse Document Frequency) digunakan untuk merepresentasikan resep sebagai vektor numerik berdasarkan kata-kata yang muncul dalam deskripsinya.
-- Term Frequency (TF): Mengukur seberapa sering suatu kata muncul dalam resep tertentu.
-- Inverse Document Frequency (IDF): Memberi bobot lebih besar pada kata-kata unik yang tidak sering muncul di seluruh resep.
-- Parameter `ngram_range=(1, 2)` memungkinkan analisis kata tunggal (unigrams) dan pasangan kata (bigrams).
-- Kata-kata umum dalam bahasa Inggris dihapus dengan stop_words='english'.
 
-2. Cosine Similarity
+1. Cosine Similarity
 Menggunakan Cosine Similarity untuk mengukur tingkat kemiripan antar resep berdasarkan vektor TF-IDF. Nilai kemiripan dihitung berdasarkan sudut antar-vektor:
 - Nilai mendekati 1 berarti kedua resep sangat mirip.
 - Nilai mendekati 0 berarti keduanya tidak mirip sama sekali.
 
-3. Mapping Nama Resep ke Indeks:
+2. Mapping Nama Resep ke Indeks:
 Membuat indeks berdasarkan nama resep untuk mempermudah pencarian resep tertentu.
 
-4. Membangun Fungsi Rekomendasi:
+3. Membangun Fungsi Rekomendasi:
 Fungsi ini menghasilkan daftar rekomendasi berdasarkan:
 - Input resep: Resep yang dimasukkan pengguna.
 - Kemiripan kosinus: Dihitung dengan skor kemiripan untuk semua resep lainnya.
@@ -158,8 +176,10 @@ Langkah-langkah dalam fungsi:
 - Mengambil nama resep, bahan, dan ID dari rekomendasi teratas.
 - Mengembalikan hasil dalam bentuk DataFrame.
 
-5. Menghasilkan Output:
-Memberikan 8 resep yang paling mirip dengan "Banana Bread" berdasarkan bahan atau deskripsi yang ada.
+4. Menghasilkan Output atau **Top n Recommendation**:
+Fungsi akan mengembalikan n resep yang paling mirip dengan "Banana Bread" berdasarkan bahan atau deskripsi yang ada. Disini untuk parameter `resep` pada fungsi saya masukkan sebuah string "Banana Bread" dan parameter n = 8. Artinya fungsi akan mengembalikan top 8 rekomendasi resep yang memiliki kesamaan nilai cosine paling tinggi terhadap "Banan Bread"
+
+![image](https://github.com/user-attachments/assets/34f885ed-5566-4298-869d-18ba631a8fa5)
 
 
 ### B. Collaborative Filtering Menggunakan Neural Network
@@ -200,8 +220,11 @@ Sehingga outputnya didapat dari fungsi aktivasi sigmoid yang digunakan untuk men
 - Menghitung rating yang diprediksi untuk resep yang belum dinilai oleh pengguna.
 - Menyortir resep berdasarkan rating yang diprediksi dan memilih top_n resep teratas.
 
-7. Mendapatkan Rekomendasi
-- Menghasilkan 5 resep teratas yang direkomendasikan untuk pengguna secara acak (random_author_id).
+7. Mendapatkan Rekomendasi atau **Top n Recommendation**:
+
+![image](https://github.com/user-attachments/assets/f9e6d42c-4554-4ab1-9716-2f7aca7eac25)
+
+Fungsi yang sudah dibangun akan mengembalikan top n rekomendasi resep makanan berdasarkan kesamaan user atau pengguna dalam menyukai suatu resep makanan berdasarkan kategori resep. Fungsi tersebut menerima input parameter `model`, `author_id`, dan `top_n`. Pada kasus ini saya memberikan `model` yaitu model neural network yang sudah dibangun, lalu untuk `author_id` itu saya pilih secara acak, dan `top_n` adalah 5. Artinya sistem akan merekomendasikan resep makanan yang belum pernah user pakai dan resep hasil rekomendasi tersebut diambil dari user lain yang menyukai resep tersebut.
 
 #### Kelebihan Collaborative Filtering dengan Neural Network
 1. Daya Prediksi Lebih Baik:
@@ -237,21 +260,23 @@ Recall@K = Jumlah item relevan dalam top K rekomendasi / Jumlah total it
 
 Recall@K menunjukkan kemampuan model untuk menangkap semua item relevan dalam daftar rekomendasi teratas. Jika terdapat banyak item relevan tapi model hanya berhasil merekomendasikan sedikit dari mereka, recall akan rendah.
 
-3. Average Precision@K (AP@K) adalah rata-rata precision pada setiap level rekomendasi dalam K teratas.
+*K dan N adalah sama
 
-AP@K = (1 / |relevan|) . i=1 ∑ k Precision@i x I(rekomendasi i . ∈ relevan)
+3. Average Precision@N (AP@N) adalah rata-rata precision pada setiap level rekomendasi dalam N teratas.
 
-AP@K memberikan skor rata-rata yang lebih memperhatikan kualitas posisi dalam daftar rekomendasi. AP@K lebih memberi nilai pada posisi item relevan yang lebih tinggi dalam daftar rekomendasi.
+![image](https://github.com/user-attachments/assets/115a85e5-97c5-455c-8faf-4789d890ffa3)
 
-4. Mean Average Precision@K (MAP@K) adalah rata-rata dari AP@K untuk semua pengguna, yang memberikan gambaran umum kinerja model untuk seluruh dataset.
+AP@N memberikan skor rata-rata yang lebih memperhatikan kualitas posisi dalam daftar rekomendasi. AP@N lebih memberi nilai pada posisi item relevan yang lebih tinggi dalam daftar rekomendasi.
 
-MAP@K = (1/N) u=1 ∑ N AP@K u
+4. Mean Average Precision@N (MAP@N) adalah rata-rata dari AP@N untuk semua pengguna, yang memberikan gambaran umum kinerja model untuk seluruh dataset.
 
-MAP@K memberikan gambaran kinerja model pada skala yang lebih luas, dengan menghitung rata-rata dari skor AP@K untuk setiap pengguna. Nilai ini mencerminkan seberapa baik model dalam memberikan rekomendasi yang relevan di seluruh dataset.
+![image](https://github.com/user-attachments/assets/d79f36d3-fb00-4ba9-9148-f04a40e5ef49)
+
+MAP@N memberikan gambaran kinerja model pada skala yang lebih luas, dengan menghitung rata-rata dari skor AP@N untuk setiap pengguna. Nilai ini mencerminkan seberapa baik model dalam memberikan rekomendasi yang relevan di seluruh dataset.
 
 Hasil evaluasi menunjukkan bahwa Precision@40 dan Recall@40 bervariasi untuk masing-masing resep yang dievaluasi. Sebagai contoh, untuk "Banana Bread", precision sebesar 0.025 dan recall sebesar 0.111 menunjukkan bahwa hanya sebagian kecil dari rekomendasi yang relevan dengan total item relevan yang ada. Namun, Average Precision lebih tinggi di "Sweet Potato Casserole" (AP@40 = 0.292), yang menunjukkan bahwa meskipun jumlah item relevan tidak banyak, posisi item relevan dalam rekomendasi cukup baik.
 
-MAP@40 untuk semua resep di dataset adalah 0.0395, yang merupakan nilai rata-rata dari AP@K untuk setiap resep yang diuji. Ini menunjukkan bahwa meskipun ada beberapa rekomendasi yang sangat baik, banyak rekomendasi yang kurang relevan untuk banyak resep, yang menandakan bahwa model dapat ditingkatkan.
+MAP@40 untuk semua resep di dataset adalah 0.0395, yang merupakan nilai rata-rata dari AP@N untuk setiap resep yang diuji. Ini menunjukkan bahwa meskipun ada beberapa rekomendasi yang sangat baik, banyak rekomendasi yang kurang relevan untuk banyak resep, yang menandakan bahwa model dapat ditingkatkan.
 
 
 #### B. Collaborative Filtering
