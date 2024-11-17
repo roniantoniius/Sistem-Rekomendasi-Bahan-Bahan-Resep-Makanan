@@ -284,25 +284,19 @@ MAP@40 untuk semua resep di dataset adalah 0.0395, yang merupakan nilai rata-rat
 1. **Mean Squared Error (MSE)**  
    MSE mengukur rata-rata dari kuadrat selisih antara nilai prediksi dan nilai aktual (rating yang sebenarnya). MSE memberi penalti yang lebih besar pada kesalahan yang lebih besar, karena kesalahan dihitung dalam bentuk kuadrat.  
 
-   \[
-   \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
-   \]
+![image](https://github.com/user-attachments/assets/ca72f402-ebcd-4e0b-903e-5a559200a61b)
 
    di mana 𝑦𝑖 adalah nilai aktual dan 𝑦^𝑖 adalah prediksi model.
 
 2. Root Mean Squared Error (RMSE) adalah akar kuadrat dari MSE, memberikan nilai yang lebih mudah diinterpretasikan karena berada pada satuan yang sama dengan data asli (misalnya, rating).
 
-   \[
-   \text{RMSE} = \sqrt{\text{MSE}}
-   \]
+![image](https://github.com/user-attachments/assets/4ab2ed9a-7e0a-492b-9a2e-14be9e3a9dec)
 
 RMSE memberi gambaran tentang seberapa besar kesalahan model dalam skala yang sama dengan data asli. Nilai RMSE yang lebih rendah menunjukkan prediksi yang lebih akurat.
 
 3. Mean Absolute Error (MAE) mengukur rata-rata absolut dari selisih antara nilai prediksi dan nilai aktual. Berbeda dengan MSE, MAE tidak memberikan penalti lebih besar pada kesalahan besar dan lebih mudah dipahami secara intuitif.
 
-   \[
-   \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
-   \]
+![image](https://github.com/user-attachments/assets/959b356c-ad15-4cc0-a197-da91d84553ec)
 
 MAE memberikan gambaran tentang seberapa jauh prediksi model dari nilai sebenarnya, tanpa memperbesar kesalahan yang lebih besar seperti pada MSE.
 
