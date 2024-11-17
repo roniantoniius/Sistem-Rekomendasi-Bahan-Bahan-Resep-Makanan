@@ -109,46 +109,45 @@ Membuat fungsi Impute Missing Value terhadap suatu variabel sebagai input supaya
 
 2. Data Cleaning Untuk Content Based Filtering
 
-- Menghapus kolom waktu yang tidak berkaitan dengan sistem rekomendasi seperti `DateSubmitted`, `DateModified`, dll.
+   - Menghapus kolom waktu yang tidak berkaitan dengan sistem rekomendasi seperti `DateSubmitted`, `DateModified`, dll.
 
-- Menghapus string "PT" pada variabel waktu yang berkaitan dengan sistem rekomendasi.
+   - Menghapus string "PT" pada variabel waktu yang berkaitan dengan sistem rekomendasi.
 Supaya variabel waktu atau lama masak resep tersebut bisa digunakan untuk rekomendasi yang menjelaskan tentang waktu seperti "H" untuk Hour.
 
-- Membuat fungsi untuk `reformatRecipe` variabel `RecipeInstructions`.
+   - Membuat fungsi untuk `reformatRecipe` variabel `RecipeInstructions`.
 Karena data pada variabel tersebut sepertinya dalam bentuk list tuple dan perlu diubah menjadi format string.
 
-- Membuat fungsi `reformatKolom`
+   - Membuat fungsi `reformatKolom`
 Hal ini dilakukan karena terdapat beberapa kolom seperti `Images`, `Keywords`, dll yang formatnya masih berantakan. Seperti ada yang memiliki tanda kurung tidak diperlukan, penggunaan huruf "c", dan adanya teks unik seperti "/" dan "\n", selain itu NA diubah menjadi format string. Supaya model CBF dapat menerima string teks tersebut.
 
-- Menggunakan 10% dari metadata
+   - Menggunakan 10% dari metadata
 Hal ini dilakkuan karena adanya keterbatasan sumber daya dan waktu, 10% data dipilih berdasarkan popularitas melalui jumlah rating dari seluruh resep.
 
-- Menghapus baris yang missing value
+   - Menghapus baris yang missing value
 Hal ini hanya dilakukan pada variabel yang akan digunakan pada modeling dengan Content Based Filtering.
 
-- Menyiapkan variabel `Resep` untuk digunakan pada model CBF
+   - Menyiapkan variabel `Resep` untuk digunakan pada model CBF
 Hal ini dilakukan dengan menggabungkan beberapa variabel seperti kata kunci resep, bahan-bahan, kategori resep, dan lama resep dimasak. Khusus untuk bahan-bahan resep itu diubah dan diurutkan menjadi string terlebih dahulu dari yang awalnya sebuah list.
 
-- Count Vectorizer dengan TF-IDF
-Teknik TF-IDF (Term Frequency-Inverse Document Frequency) digunakan untuk merepresentasikan resep sebagai vektor numerik berdasarkan kata-kata yang muncul dalam deskripsinya.
-   - Term Frequency (TF): Mengukur seberapa sering suatu kata muncul dalam resep tertentu.
-   - Inverse Document Frequency (IDF): Memberi bobot lebih besar pada kata-kata unik yang tidak sering muncul di seluruh resep.
-   - Parameter `ngram_range=(1, 2)` memungkinkan analisis kata tunggal (unigrams) dan pasangan kata (bigrams).
-   - Kata-kata umum dalam bahasa Inggris dihapus dengan stop_words='english'.
+   - Count Vectorizer dengan TF-IDF
+   Teknik TF-IDF (Term Frequency-Inverse Document Frequency) digunakan untuk merepresentasikan resep sebagai vektor numerik berdasarkan kata-kata yang muncul dalam deskripsinya.
+      - Term Frequency (TF): Mengukur seberapa sering suatu kata muncul dalam resep tertentu.
+      - Inverse Document Frequency (IDF): Memberi bobot lebih besar pada kata-kata unik yang tidak sering muncul di seluruh resep.
+      - Parameter `ngram_range=(1, 2)` memungkinkan analisis kata tunggal (unigrams) dan pasangan kata (bigrams).
+      - Kata-kata umum dalam bahasa Inggris dihapus dengan stop_words='english'.
 
 3. Data Cleaning Untuk Collaborative Filtering
-- Menyiapkan data untuk Collaborative Filtering
-Membuat dataframe baru dengan menggabungkan data ulasan dan resep berdasarkan RecipeId, mengambil kolom penting seperti RecipeCategory, Rating, AuthorId, dan RecipeId, lalu menangani nilai kosong pada Rating dengan mengisinya menggunakan rata-rata rating.
+   - Menyiapkan data untuk Collaborative Filtering
+   Membuat dataframe baru dengan menggabungkan data ulasan dan resep berdasarkan RecipeId, mengambil kolom penting seperti RecipeCategory, Rating, AuthorId, dan RecipeId, lalu menangani nilai kosong pada Rating dengan mengisinya menggunakan rata-rata rating.
 
-- Encoding nominal
-melakukan encoding pada kolom AuthorId, RecipeId, dan RecipeCategory menggunakan LabelEncoder untuk mengonversi nilai kategori menjadi numerik dan nominal.
+   - Encoding nominal
+   melakukan encoding pada kolom AuthorId, RecipeId, dan RecipeCategory menggunakan LabelEncoder untuk mengonversi nilai kategori menjadi numerik dan nominal.
 
-- Normalisasi `Rating`
-nilai Rating dinormalisasi ke rentang 0-1 berdasarkan nilai minimum dan maksimum dalam dataset. data fitur (X2) terdiri dari kolom yang telah di-encode, dan data target (y2) adalah rating yang sudah dinormalisasi.
+   - Normalisasi `Rating`
+   nilai Rating dinormalisasi ke rentang 0-1 berdasarkan nilai minimum dan maksimum dalam dataset. data fitur (X2) terdiri dari kolom yang telah di-encode, dan data target (y2) adalah rating yang sudah dinormalisasi.
 
-- Splitting dataset
-Split atau membagi dataset dengan bobot 80:20 untuk data train dan data validasi.
-
+   - Splitting dataset
+   Split atau membagi dataset dengan bobot 80:20 untuk data train dan data validasi.
 
 ## Modeling and Result
 
