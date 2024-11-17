@@ -159,22 +159,21 @@ Tahapannya:
 
 1. Cosine Similarity
 Menggunakan Cosine Similarity untuk mengukur tingkat kemiripan antar resep berdasarkan vektor TF-IDF. Nilai kemiripan dihitung berdasarkan sudut antar-vektor:
-- Nilai mendekati 1 berarti kedua resep sangat mirip.
-- Nilai mendekati 0 berarti keduanya tidak mirip sama sekali.
+   - Nilai mendekati 1 berarti kedua resep sangat mirip.
+   - Nilai mendekati 0 berarti keduanya tidak mirip sama sekali.
 
 2. Mapping Nama Resep ke Indeks:
 Membuat indeks berdasarkan nama resep untuk mempermudah pencarian resep tertentu.
 
-3. Membangun Fungsi Rekomendasi:
-Fungsi ini menghasilkan daftar rekomendasi berdasarkan:
-- Input resep: Resep yang dimasukkan pengguna.
-- Kemiripan kosinus: Dihitung dengan skor kemiripan untuk semua resep lainnya.
+3. Membangun Fungsi Rekomendasi: Fungsi ini menghasilkan daftar rekomendasi berdasarkan:
+      - Input resep: Resep yang dimasukkan pengguna.
+      - Kemiripan kosinus: Dihitung dengan skor kemiripan untuk semua resep lainnya.
 
-Langkah-langkah dalam fungsi:
-- Mencari indeks dari resep input.
-- Mengurutkan skor kemiripan dari tertinggi ke terendah (kecuali resep itu sendiri).
-- Mengambil nama resep, bahan, dan ID dari rekomendasi teratas.
-- Mengembalikan hasil dalam bentuk DataFrame.
+   Langkah-langkah dalam fungsi:
+      - Mencari indeks dari resep input.
+      - Mengurutkan skor kemiripan dari tertinggi ke terendah (kecuali resep itu sendiri).
+      - Mengambil nama resep, bahan, dan ID dari rekomendasi teratas.
+      - Mengembalikan hasil dalam bentuk DataFrame.
 
 4. Menghasilkan Output atau **Top n Recommendation**:
 Fungsi akan mengembalikan n resep yang paling mirip dengan "Banana Bread" berdasarkan bahan atau deskripsi yang ada. Disini untuk parameter `resep` pada fungsi saya masukkan sebuah string "Banana Bread" dan parameter n = 8. Artinya fungsi akan mengembalikan top 8 rekomendasi resep yang memiliki kesamaan nilai cosine paling tinggi terhadap "Banan Bread"
@@ -188,37 +187,37 @@ Membuat model berbasis neural network yang mampu mempelajari interaksi antar ent
 
 #### Tahapan Dalam Membuat Model Berbasis Jaringan Syaraf
 1. Membuat class Model `RecommenderNet`:
-- num_users: Jumlah pengguna yang unik dalam dataset (total AuthorId).
-- num_recipes: Jumlah resep yang unik dalam dataset (total RecipeId).
-- num_categories: Jumlah kategori resep yang unik.
-- embedding_size: Ukuran dimensi vektor embedding untuk setiap entitas (pengguna, resep, kategori).
+   - num_users: Jumlah pengguna yang unik dalam dataset (total AuthorId).
+   - num_recipes: Jumlah resep yang unik dalam dataset (total RecipeId).
+   - num_categories: Jumlah kategori resep yang unik.
+   - embedding_size: Ukuran dimensi vektor embedding untuk setiap entitas (pengguna, resep, kategori).
 
 2. Layer Embedding:
 Dilakukan karena setiap data yang digunakan itu merupakan data nominal dan perlu untuk di kategorikan khususnya variabel `RecipeCategory` yang memiliki 200+ kategori resep makanan.
-- num_users, num_recipes, dan num_categories adalah jumlah kategori unik.
-- embedding_size: Dimensi dari representasi embedding.
-- embeddings_initializer="he_normal": Teknik inisialisasi bobot untuk menghindari vanishing gradient.
-- embeddings_regularizer=tf.keras.regularizers.l2(1e-5): Regularisasi L2 untuk mencegah overfitting pada embedding.
+   - num_users, num_recipes, dan num_categories adalah jumlah kategori unik.
+   - embedding_size: Dimensi dari representasi embedding.
+   - embeddings_initializer="he_normal": Teknik inisialisasi bobot untuk menghindari vanishing gradient.
+   - embeddings_regularizer=tf.keras.regularizers.l2(1e-5): Regularisasi L2 untuk mencegah overfitting pada embedding.
 
 3. Menghitung Skor Prediksi dengan dua komponen:
-- Dot product antara user dan resep: Mengukur interaksi antara pengguna dan resep berdasarkan embedding mereka.
-- Dot product antara resep dan kategori: Mengukur relevansi antara resep dan kategori yang terkait.
+   - Dot product antara user dan resep: Mengukur interaksi antara pengguna dan resep berdasarkan embedding mereka.
+   - Dot product antara resep dan kategori: Mengukur relevansi antara resep dan kategori yang terkait.
 
 Sehingga outputnya didapat dari fungsi aktivasi sigmoid yang digunakan untuk mengubah skor prediksi menjadi rentang antara 0 dan 1 (seperti rating).
 
 4. Menyiapkan Optimizer dan Model
-- Optimizer: ExponentialDecay digunakan untuk mengurangi laju pembelajaran secara eksponensial seiring berjalannya waktu. Ini membantu model untuk belajar dengan cepat di awal dan stabil di akhir pelatihan.
-- Loss Function: MeanSquaredError digunakan untuk mengukur perbedaan antara rating yang diprediksi dengan rating yang sebenarnya. Model berusaha untuk meminimalkan kesalahan ini.
-- Metrics: RootMeanSquaredError (RMSE) dan MeanAbsoluteError (MAE) digunakan untuk mengevaluasi kinerja model.
+   - Optimizer: ExponentialDecay digunakan untuk mengurangi laju pembelajaran secara eksponensial seiring berjalannya waktu. Ini membantu model untuk belajar dengan cepat di awal dan stabil di akhir pelatihan.
+   - Loss Function: MeanSquaredError digunakan untuk mengukur perbedaan antara rating yang diprediksi dengan rating yang sebenarnya. Model berusaha untuk meminimalkan kesalahan ini.
+   - Metrics: RootMeanSquaredError (RMSE) dan MeanAbsoluteError (MAE) digunakan untuk mengevaluasi kinerja model.
 
 5. Melatih Model
-- Pelatihan: Model dilatih menggunakan data pelatihan (X_train, y_train) selama 10 epoch dengan batch size 128.
-- Validation: X_val dan y_val digunakan untuk memverifikasi kinerja model pada data yang tidak terlihat selama pelatihan.
+   - Pelatihan: Model dilatih menggunakan data pelatihan (X_train, y_train) selama 10 epoch dengan batch size 128.
+   - Validation: X_val dan y_val digunakan untuk memverifikasi kinerja model pada data yang tidak terlihat selama pelatihan.
 
 6. Membuat Fungsi Rekomendasi Resep
-- Menyaring resep yang sudah dinilai oleh pengguna.
-- Menghitung rating yang diprediksi untuk resep yang belum dinilai oleh pengguna.
-- Menyortir resep berdasarkan rating yang diprediksi dan memilih top_n resep teratas.
+   - Menyaring resep yang sudah dinilai oleh pengguna.
+   - Menghitung rating yang diprediksi untuk resep yang belum dinilai oleh pengguna.
+   - Menyortir resep berdasarkan rating yang diprediksi dan memilih top_n resep teratas.
 
 7. Mendapatkan Rekomendasi atau **Top n Recommendation**:
 
@@ -239,22 +238,18 @@ Regularisasi L2 pada embedding membantu mencegah overfitting, membuat model lebi
 
 ## Evaluation
 
-#### A. Content Based Filtering
-Terdapat beberapa parameter evaluasi yang akan diuji untuk melihat performa dari model rekomendasi Content Based Filtering sebelumnya yaitu:
-1. Precision @ K
-2. Recall @ K
-3. Average Precision @ K
-4. Mean Average Precision @ K
-
+### A. Content Based Filtering
 Untuk mengevaluasi sistem rekomendasi CBF tersebut saya menggunakan tiga metrik untuk mengukur kinerja model, yaitu Precision@K, Recall@K, dan Average Precision@K (AP@K). Di samping itu, ada Mean Average Precision@K (MAP@K) yang menggabungkan hasil evaluasi dari semua resep untuk menghasilkan skor keseluruhan.
 
-1. Precision@K mengukur seberapa banyak item yang relevan ada di dalam K rekomendasi teratas yang diberikan oleh model.
+#### Precision@K
+mengukur seberapa banyak item yang relevan ada di dalam K rekomendasi teratas yang diberikan oleh model.
 
 Precision@K = Jumlah item relevan dalam top K rekomendasi / K
 
 Precision@K memberi tahu kita berapa banyak dari K rekomendasi yang benar-benar relevan bagi pengguna. Misalnya, jika 5 dari 40 rekomendasi teratas relevan, precision akan menjadi 0.125 (5 relevan / 40 rekomendasi).
 
-2. Recall@K mengukur seberapa banyak item relevan yang ada di dalam K rekomendasi teratas dibandingkan dengan seluruh item relevan yang tersedia.
+#### Recall@K
+mengukur seberapa banyak item relevan yang ada di dalam K rekomendasi teratas dibandingkan dengan seluruh item relevan yang tersedia.
 
 Recall@K = Jumlah item relevan dalam top K rekomendasi / Jumlah total item relevan
 
@@ -262,13 +257,15 @@ Recall@K menunjukkan kemampuan model untuk menangkap semua item relevan dalam da
 
 *K dan N adalah sama
 
-3. Average Precision@N (AP@N) adalah rata-rata precision pada setiap level rekomendasi dalam N teratas.
+#### Average Precision@N (AP@N)
+adalah rata-rata precision pada setiap level rekomendasi dalam N teratas.
 
 ![image](https://github.com/user-attachments/assets/115a85e5-97c5-455c-8faf-4789d890ffa3)
 
 AP@N memberikan skor rata-rata yang lebih memperhatikan kualitas posisi dalam daftar rekomendasi. AP@N lebih memberi nilai pada posisi item relevan yang lebih tinggi dalam daftar rekomendasi.
 
-4. Mean Average Precision@N (MAP@N) adalah rata-rata dari AP@N untuk semua pengguna, yang memberikan gambaran umum kinerja model untuk seluruh dataset.
+#### Mean Average Precision@N (MAP@N)
+adalah rata-rata dari AP@N untuk semua pengguna, yang memberikan gambaran umum kinerja model untuk seluruh dataset.
 
 ![image](https://github.com/user-attachments/assets/d79f36d3-fb00-4ba9-9148-f04a40e5ef49)
 
@@ -279,33 +276,34 @@ Hasil evaluasi menunjukkan bahwa Precision@40 dan Recall@40 bervariasi untuk mas
 MAP@40 untuk semua resep di dataset adalah 0.0395, yang merupakan nilai rata-rata dari AP@N untuk setiap resep yang diuji. Ini menunjukkan bahwa meskipun ada beberapa rekomendasi yang sangat baik, banyak rekomendasi yang kurang relevan untuk banyak resep, yang menandakan bahwa model dapat ditingkatkan.
 
 
-#### B. Collaborative Filtering
+### B. Collaborative Filtering
 
-1. **Mean Squared Error (MSE)**  
+#### **Mean Squared Error (MSE)**  
    MSE mengukur rata-rata dari kuadrat selisih antara nilai prediksi dan nilai aktual (rating yang sebenarnya). MSE memberi penalti yang lebih besar pada kesalahan yang lebih besar, karena kesalahan dihitung dalam bentuk kuadrat.  
 
 ![image](https://github.com/user-attachments/assets/ca72f402-ebcd-4e0b-903e-5a559200a61b)
 
    di mana 𝑦𝑖 adalah nilai aktual dan 𝑦^𝑖 adalah prediksi model.
 
-2. Root Mean Squared Error (RMSE) adalah akar kuadrat dari MSE, memberikan nilai yang lebih mudah diinterpretasikan karena berada pada satuan yang sama dengan data asli (misalnya, rating).
+#### Root Mean Squared Error (RMSE)
+adalah akar kuadrat dari MSE, memberikan nilai yang lebih mudah diinterpretasikan karena berada pada satuan yang sama dengan data asli (misalnya, rating).
 
 ![image](https://github.com/user-attachments/assets/4ab2ed9a-7e0a-492b-9a2e-14be9e3a9dec)
 
 RMSE memberi gambaran tentang seberapa besar kesalahan model dalam skala yang sama dengan data asli. Nilai RMSE yang lebih rendah menunjukkan prediksi yang lebih akurat.
 
-3. Mean Absolute Error (MAE) mengukur rata-rata absolut dari selisih antara nilai prediksi dan nilai aktual. Berbeda dengan MSE, MAE tidak memberikan penalti lebih besar pada kesalahan besar dan lebih mudah dipahami secara intuitif.
+#### Mean Absolute Error (MAE)
+mengukur rata-rata absolut dari selisih antara nilai prediksi dan nilai aktual. Berbeda dengan MSE, MAE tidak memberikan penalti lebih besar pada kesalahan besar dan lebih mudah dipahami secara intuitif.
 
 ![image](https://github.com/user-attachments/assets/959b356c-ad15-4cc0-a197-da91d84553ec)
 
 MAE memberikan gambaran tentang seberapa jauh prediksi model dari nilai sebenarnya, tanpa memperbesar kesalahan yang lebih besar seperti pada MSE.
 
-
+#### Kesimpulan Evaluasi
 Dari hasil pelatihan model yang ditampilkan, kita bisa melihat beberapa metrik yang terukur pada setiap epoch, baik pada data pelatihan (train) maupun data validasi (validation):
 - Loss (MSE) berkurang secara keseluruhan, yang menunjukkan bahwa model semakin baik dalam meminimalkan kesalahan prediksi antara prediksi dan nilai aktual.
 - Root Mean Squared Error (RMSE) menunjukkan penurunan dari 0.3158 pada epoch pertama menjadi 0.2803 pada epoch terakhir, yang menandakan bahwa kesalahan prediksi semakin kecil seiring berjalannya waktu.
 - Mean Absolute Error (MAE) juga mengalami penurunan yang menunjukkan perbaikan akurasi prediksi, dengan nilai berkurang dari 0.1486 pada epoch pertama menjadi 0.1202 pada epoch terakhir.
-
 
 Namun, meskipun ada penurunan yang konsisten pada MSE, RMSE, dan MAE, nilai val_loss, val_rmse, dan val_mae relatif stabil, yang menunjukkan bahwa model mulai mengalami overfitting setelah beberapa epoch. Hal ini terlihat pada epoch ke-7 di mana val_loss mulai meningkat meskipun metrik pelatihan terus menurun.
 
@@ -315,8 +313,8 @@ Namun, meskipun ada penurunan yang konsisten pada MSE, RMSE, dan MAE, nilai val_
 2. Collaborative Filtering, meskipun menunjukkan penurunan yang baik pada MSE, RMSE, dan MAE, juga menunjukkan tanda-tanda overfitting pada data validasi. Hal ini menandakan bahwa meskipun model ini lebih baik dalam hal prediksi akurasi, ia mungkin tidak cukup generalizable tanpa tambahan penyesuaian.
 
 3. Dengan mempertimbangkan penurunan kesalahan prediksi yang lebih signifikan pada Collaborative Filtering, dan meskipun terdapat indikasi overfitting pada data validasi, model CF tetap menunjukkan hasil yang lebih baik dari sisi akurasi prediksi dibandingkan dengan model CBF yang memiliki MAP yang sangat rendah.
-- RMSE turun dari 0.3158 pada epoch pertama menjadi 0.2803 pada epoch terakhir.
-- MAE berkurang dari 0.1486 menjadi 0.1202.
+   - RMSE turun dari 0.3158 pada epoch pertama menjadi 0.2803 pada epoch terakhir.
+   - MAE berkurang dari 0.1486 menjadi 0.1202.
 
 Namun tentu harus dilakukan perbaikan terhadap Collaborative Filtering dengan penyesuaian parameter untuk mengurangi overfitting, seperti penerapan regularisasi lebih kuat atau early stopping, serta fine-tuning untuk memperbaiki generalizability dan mengoptimalkan performa pada data validasi.
 
