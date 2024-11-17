@@ -1,12 +1,9 @@
 ## Project Overview:
-Pada era digital ini, perkembangan industri kuliner semakin pesat, khususnya di Indonesia, di mana kuliner menjadi bagian penting dari budaya dan kehidupan sehari-hari. Seiring bertambahnya variasi resep dan bahan, konsumen sering kali kesulitan menemukan resep yang sesuai dengan preferensi atau bahan yang mereka miliki (Dewi et al, 2022). Hal ini menimbulkan kebutuhan untuk menciptakan sistem rekomendasi resep yang dapat memberikan saran yang relevan dan sesuai dengan kebutuhan pengguna.
+Pada era digital ini, perkembangan industri kuliner semakin pesat, khususnya di Indonesia, di mana kuliner menjadi bagian penting dari budaya dan kehidupan sehari-hari. Seiring bertambahnya variasi resep dan bahan, konsumen sering kali kesulitan menemukan resep yang sesuai dengan preferensi atau bahan yang mereka miliki (Dewi et al., 2022). Hal ini menimbulkan kebutuhan untuk menciptakan sistem rekomendasi resep yang dapat memberikan saran yang relevan dan sesuai dengan kebutuhan pengguna.
 
 Sistem Rekomendasi Resep Makanan ini dibangun menggunakan pendekatan Content-Based Filtering yang memanfaatkan informasi dari resep-resep sebelumnya untuk menyesuaikan preferensi pengguna. Selain itu, dengan kombinasi pendekatan Collaborative Filtering, sistem ini dapat menghasilkan rekomendasi hybrid yang memperhitungkan opini pengguna lain yang memiliki preferensi serupa melalui review dari setiap resep. Kombinasi ini bertujuan untuk memberikan rekomendasi yang tidak hanya relevan secara konten, tetapi juga sesuai dengan preferensi kolektif dari pengguna.
 
 Sistem ini memiliki potensi besar dalam mempermudah pengguna dalam menemukan resep yang diinginkan dengan mempertimbangkan beberapa opsi filter, seperti kategori masakan, bahan-bahan yang tersedia, atau masakan populer. Proyek ini tidak hanya penting untuk memberikan kemudahan bagi pengguna, tetapi juga membuka peluang inovasi dalam pengembangan aplikasi kuliner di Indonesia.
-
-#### References:
-Dewi, I. C., Indrianto, A. T. L., Soediro, M., Winarno, P. S., Minantyo, H., Sondak, M. R., ... & Leoparjo, F. (2022). Trend Bisnis Food and Beverages Menuju 2030.
 
 ## Business Understanding:
 Dalam membangun sistem rekomendasi ini, penting untuk memahami tantangan dan peluang yang dapat dihadapi. Bagian ini mendefinisikan masalah utama, tujuan, dan pendekatan solusi yang digunakan.
@@ -19,8 +16,8 @@ Dalam membangun sistem rekomendasi ini, penting untuk memahami tantangan dan pel
 1. Mengembangkan sistem rekomendasi yang dapat menyarankan resep yang sesuai berdasarkan bahan yang ada, kategori tertentu, atau preferensi pribadi.
 2. Menggabungkan pendekatan Content-Based dan Collaborative Filtering untuk meningkatkan kualitas rekomendasi dengan mempertimbangkan preferensi kolektif pengguna.
 
-#### Pendekatan Solusi
-1. Content-Based Filtering: Pendekatan ini digunakan untuk merekomendasikan resep berdasarkan karakteristik resep yang serupa dengan resep yang disukai oleh pengguna. 
+#### Solution Statement
+1. Content-Based Filtering: Pendekatan ini digunakan untuk merekomendasikan resep berdasarkan karakteristik resep yang serupa dengan resep yang disukai oleh pengguna.
 2. Collaborative Filtering: Dengan memperhitungkan preferensi pengguna lain yang memiliki kesamaan, sistem akan memberikan rekomendasi berdasarkan kecenderungan pengguna kolektif.
 
 
@@ -82,7 +79,7 @@ Berikut merupakan variabel-variabel yang digunakan:
 | `DateModified`   | Tanggal terakhir ulasan diubah atau diperbarui.                                                         |
 
 
-#### Hasil Analisis
+#### Hasil Analisis Melalui Exploratory Data Analysis
 Waktu memasak kebanyakan ada di sekitar 10 menit sampai 30 menit, sedangkan kalori sepertinya persebarannya terlalu luas, untuk rating rata-rata pengguna memberikan nilai 4 sampai 5. Penulis `Sydney Mike` memiliki jumlah ulasan yang paling banyak menunjukkan bahwa beliau seorang yang popular baik dari segi baik atau hal lainnya.
 
 Berdasarkan visualisasi yang dibuat menggunakan data resep dan ulasan ditemukan bahwa persebaran data point untuk resep yang memiliki kalori banyak itu rata-rata dimasak pada rentang 10 sampai 30 menit. Selain itu kategori yang memiliki rata-rata jumlah kalori paling banyak yaitu Guatemalan, Buttermilk Biscuits, dan Labor Day. Artinya makanan berlemak yang merupakan tentu saja makanan berat.
@@ -95,40 +92,38 @@ Membuat fungsi Impute Missing Value terhadap suatu variabel sebagai input supaya
 
 2. Data Cleaning Untuk Content Based Filtering
 
-a. Menghapus kolom waktu yang tidak berkaitan dengan sistem rekomendasi seperti `DateSubmitted`, `DateModified`, dll.
+- Menghapus kolom waktu yang tidak berkaitan dengan sistem rekomendasi seperti `DateSubmitted`, `DateModified`, dll.
 
-b. Menghapus string "PT" pada variabel waktu yang berkaitan dengan sistem rekomendasi.
+- Menghapus string "PT" pada variabel waktu yang berkaitan dengan sistem rekomendasi.
 Supaya variabel waktu atau lama masak resep tersebut bisa digunakan untuk rekomendasi yang menjelaskan tentang waktu seperti "H" untuk Hour.
 
-c. Membuat fungsi untuk `reformatRecipe` variabel `RecipeInstructions`.
+- Membuat fungsi untuk `reformatRecipe` variabel `RecipeInstructions`.
 Karena data pada variabel tersebut sepertinya dalam bentuk list tuple dan perlu diubah menjadi format string.
 
-d. Membuat fungsi `reformatKolom`
+- Membuat fungsi `reformatKolom`
 Hal ini dilakukan karena terdapat beberapa kolom seperti `Images`, `Keywords`, dll yang formatnya masih berantakan. Seperti ada yang memiliki tanda kurung tidak diperlukan, penggunaan huruf "c", dan adanya teks unik seperti "/" dan "\n", selain itu NA diubah menjadi format string. Supaya model CBF dapat menerima string teks tersebut.
 
-e. Menggunakan 10% dari metadata
+- Menggunakan 10% dari metadata
 Hal ini dilakkuan karena adanya keterbatasan sumber daya dan waktu, 10% data dipilih berdasarkan popularitas melalui jumlah rating dari seluruh resep.
 
-f. Menghapus baris yang missing value
+- Menghapus baris yang missing value
 Hal ini hanya dilakukan pada variabel yang akan digunakan pada modeling dengan Content Based Filtering.
 
-g. Menyiapkan variabel `Resep` untuk digunakan pada model CBF
+- Menyiapkan variabel `Resep` untuk digunakan pada model CBF
 Hal ini dilakukan dengan menggabungkan beberapa variabel seperti kata kunci resep, bahan-bahan, kategori resep, dan lama resep dimasak. Khusus untuk bahan-bahan resep itu diubah dan diurutkan menjadi string terlebih dahulu dari yang awalnya sebuah list.
 
 3. Data Cleaning Untuk Collaborative Filtering
-a. Menyiapkan data untuk Collaborative Filtering
+- Menyiapkan data untuk Collaborative Filtering
 Membuat dataframe baru dengan menggabungkan data ulasan dan resep berdasarkan RecipeId, mengambil kolom penting seperti RecipeCategory, Rating, AuthorId, dan RecipeId, lalu menangani nilai kosong pada Rating dengan mengisinya menggunakan rata-rata rating.
 
-b. Encoding nominal
+- Encoding nominal
 melakukan encoding pada kolom AuthorId, RecipeId, dan RecipeCategory menggunakan LabelEncoder untuk mengonversi nilai kategori menjadi numerik dan nominal.
 
-c. Normalisasi `Rating`
+- Normalisasi `Rating`
 nilai Rating dinormalisasi ke rentang 0-1 berdasarkan nilai minimum dan maksimum dalam dataset. data fitur (X2) terdiri dari kolom yang telah di-encode, dan data target (y2) adalah rating yang sudah dinormalisasi.
 
-d. Splitting dataset
+- Splitting dataset
 Split atau membagi dataset dengan bobot 80:20 untuk data train dan data validasi.
-
-
 
 
 ## Modeling and Result
@@ -305,3 +300,7 @@ Namun, meskipun ada penurunan yang konsisten pada MSE, RMSE, dan MAE, nilai val_
 - MAE berkurang dari 0.1486 menjadi 0.1202.
 
 Namun tentu harus dilakukan perbaikan terhadap Collaborative Filtering dengan penyesuaian parameter untuk mengurangi overfitting, seperti penerapan regularisasi lebih kuat atau early stopping, serta fine-tuning untuk memperbaiki generalizability dan mengoptimalkan performa pada data validasi.
+
+
+### References:
+Dewi, I. C., Indrianto, A. T. L., Soediro, M., Winarno, P. S., Minantyo, H., Sondak, M. R., & Leoparjo, F. (2022). Trend bisnis food and beverages menuju 2030.
